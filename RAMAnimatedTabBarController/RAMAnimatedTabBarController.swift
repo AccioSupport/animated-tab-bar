@@ -41,7 +41,7 @@ extension RAMAnimatedTabBarItem {
 
             if let iconView = iconView, let contanerView = iconView.icon.superview, badge == nil {
                 badge = RAMBadge.badge()
-                badge!.addBadgeOnView(contanerView)
+                badge?.addBadgeOnView(contanerView)
             }
 
             badge?.text = newValue
@@ -61,8 +61,8 @@ open class RAMAnimatedTabBarItem: UITabBarItem {
         }
     }
     
-    /// animation for UITabBarItem. use RAMFumeAnimation, RAMBounceAnimation, RAMRotationAnimation, RAMFrameItemAnimation, RAMTransitionAnimation
-    /// or create custom anmation inherit RAMItemAnimation
+    /// Animation for UITabBarItem. Use RAMFumeAnimation, RAMBounceAnimation, RAMRotationAnimation, RAMFrameItemAnimation, RAMTransitionAnimation
+    /// Also posible create custom anmation inherit from the RAMItemAnimation look for https://github.com/Ramotion/animated-tab-bar#creating-custom-animations
     @IBOutlet open var animation: RAMItemAnimation!
 
     /// The font used to render the UITabBarItem text.
@@ -230,6 +230,17 @@ open class RAMAnimatedTabBarController: UITabBarController {
     }
     
     /**
+     Bottom line height
+     **/
+    open var bottomLineHeight: CGFloat = 2 {
+        didSet {
+            if bottomLineHeight > 0 {
+                updateBottomLineHeight(to: bottomLineHeight)
+            }
+        }
+    }
+    
+    /**
      Bottom line time of animations duration
      **/
     open var bottomLineMoveDuration: TimeInterval = 0.3
@@ -253,6 +264,7 @@ open class RAMAnimatedTabBarController: UITabBarController {
         }
     }
 
+    var lineHeightConstraint: NSLayoutConstraint?
     var lineLeadingConstraint: NSLayoutConstraint?
     var bottomLine: UIView?
     var arrBottomAnchor:[NSLayoutConstraint] = []
@@ -516,7 +528,7 @@ open class RAMAnimatedTabBarController: UITabBarController {
             let deselectItem = items[selectedIndex]
 
             let containerPrevious: UIView = deselectItem.iconView!.icon.superview!
-            containerPrevious.backgroundColor = items[currentIndex].bgDefaultColor
+            containerPrevious.backgroundColor = items[selectedIndex].bgDefaultColor
 
             deselectItem.deselectAnimation()
 
